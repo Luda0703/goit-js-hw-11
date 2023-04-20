@@ -6,6 +6,8 @@
     <title>Page title</title>
     
     <script type="module" src="./index.js"></script>
+    <!-- <script type="module" src="./js/load-more-btn.js"></script> -->
+    
   </head>
   <body>
     <form class="search-form" id="search-form">
@@ -17,5 +19,22 @@
       />
       <button type="submit">Search</button>
     </form>
+
+    <div class="gallery">
+      <!-- Картки зображень -->
+    </div>
+
+    <button 
+    type="button" 
+    class="btn btn-primary button"
+    data-action="load-more"
+    >
+    <span
+    class="spinner spinner-border spinner-border-sm is-hidden"
+    role="status"
+    aria-hidden="true"
+    ></span>
+    <span class="label">Load more</span>
+    </button>
   </body>
 </html>
