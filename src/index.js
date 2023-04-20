@@ -1,5 +1,6 @@
 // import axios from 'axios';
 // import Notiflix from 'notiflix';
+import "./css/styles.css"
 import NewsApiService from "./js/news-api";
 import {renderGallary} from "./js/gallery";
 import LoadMoreBtn from "./js/load-more-btn";

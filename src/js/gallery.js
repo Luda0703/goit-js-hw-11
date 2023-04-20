@@ -1,4 +1,5 @@
-//import SimpleLightbox from 'simplelightbox';
+import SimpleLightbox from 'simplelightbox';
+import "simplelightbox/dist/simple-lightbox.min.css";
 export {renderGallary}
 const gallary = document.querySelector('.gallery')
 
@@ -31,3 +32,9 @@ function renderGallary (photo) {
     gallary.insertAdjacentHTML('beforeend', gallaryRander.join(''));
     // simpleLightBox.refresh();
 };
+
+const simpleLightBox = new SimpleLightbox('.gallery a', {
+    caption: true,
+    captionsData: 'alt', 
+    captionDelay: 250, 
+  });
