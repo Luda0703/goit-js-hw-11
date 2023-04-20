@@ -6,7 +6,9 @@ import Notiflix from 'notiflix';
 
 KEY = "35573875-4d45445cc9cc07d3b69f02897";
 BASE_URL = "https://pixabay.com/api/";
-URL = `${BASE_URL}?key=${KEY}&q&image_type="photo"&orientation="horizontal"&safesearch="true"`;
+URL = `${BASE_URL}?key=${KEY}&q={inputText}&image_type="photo"&orientation="horizontal"&safesearch="true"`;
+
+
 
 const form = document.querySelector('#search-form');
 const input = document.querySelector('[text]');
@@ -16,7 +18,7 @@ const gallery = document.querySelector('.gallery');
 
 
 function createGalleryItemsMarkup(galleryItems) {
-    console.log(createGalleryItemsMarkup)
+    
     return galleryItems
     .map(({ largeImageURL, tags }) => {
         return `
@@ -29,6 +31,7 @@ function createGalleryItemsMarkup(galleryItems) {
 }
 
 function galleryItemIcon(galleryItems) {
+    console.log(galleryItems)
     return galleryItems.map(
         ({ webformatURL, tags, likes, views, comments, downloads }) =>
           ` <div class="photo-card">
@@ -53,15 +56,16 @@ function galleryItemIcon(galleryItems) {
 
 function insertContent(gallery) {
     if (gallery.length === 1) {
-        // resetMarkup(input);
+        resetMarkup(input);
         form.innerHTML = galleryItemIcon(gallery);
     } else {
-        // resetMarkup(form);
+        resetMarkup(form);
         input.innerHTML = createGalleryItemsMarkup(gallery);
     }
   };
 
 const getPosts = async () => {
+    onSubmitForm()
     try {
         console.log(response.data)
         const response = await axios.get(URL);
@@ -76,28 +80,27 @@ const getPosts = async () => {
        
 
     } catch {
-        // resetMarkup(text);
-        // resetMarkup(form);
+        resetMarkup(text);
+        resetMarkup(form);
         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
     }
 }
 
 form.addEventListener('submit', getPosts);
 
-// const onSubmitForm = (e) => {
-//     e.preventDefault();
-//     let inputText = e.currentTarget.text.value.trim();
-//     if(!inputText) {
-//                 resetMarkup(text);
-//                 resetMarkup(form);
-//                 return;
-//             }
-// }
-// onSubmitForm()
+const onSubmitForm = (e) => {
+    e.preventDefault();
+    let inputText = e.currentTarget.text.value.trim();
+    if(!inputText) {
+        resetMarkup(text);
+        resetMarkup(form);
+        return;
+    }
+}
 
-// function resetMarkup(el) {
-//     el.innerHTML = '';
-//   }
+function resetMarkup(el) {
+    el.innerHTML = '';
+  }
 
 
 
