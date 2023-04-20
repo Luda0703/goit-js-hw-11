@@ -2,18 +2,18 @@ import axios from 'axios';
 import Notiflix from 'notiflix';
 
 
-
-
 KEY = "35573875-4d45445cc9cc07d3b69f02897";
 BASE_URL = "https://pixabay.com/api/";
-URL = `${BASE_URL}?key=${KEY}&q={inputText}&image_type="photo"&orientation="horizontal"&safesearch="true"`;
-
+URL = `${BASE_URL}?key=${KEY}&q=${inputText}&image_type="photo"&orientation="horizontal"&safesearch="true"`;
+console.log(URL)
 
 
 const form = document.querySelector('#search-form');
 const input = document.querySelector('[text]');
 const btn = document.querySelector('[submit]');
 const gallery = document.querySelector('.gallery');
+
+let inputText = ""
 
 
 
@@ -90,7 +90,7 @@ form.addEventListener('submit', getPosts);
 
 const onSubmitForm = (e) => {
     e.preventDefault();
-    let inputText = e.currentTarget.text.value.trim();
+    inputText = e.currentTarget.input.value.trim();
     if(!inputText) {
         resetMarkup(text);
         resetMarkup(form);
