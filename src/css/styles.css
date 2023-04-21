@@ -112,6 +112,9 @@ body {
 .info-item {
     color:red;
     font-size: 14px;
-    
+    display: block;  
 }
 
+.is-hidden {
+    display: none;
+  }
