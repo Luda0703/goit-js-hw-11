@@ -1,5 +1,5 @@
 // import axios from 'axios';
-// import Notiflix from 'notiflix';
+import Notiflix from 'notiflix';
 import "./css/styles.css"
 import NewsApiService from "./js/news-api";
 import {renderGallary} from "./js/gallery";
@@ -25,12 +25,13 @@ loadMoreBtn.refs.button.addEventListener('click', fetchHits);
 
 function onSearch (e) {
     e.preventDefault();
-
+    
+    newsApiService.resetPage();
     newsApiService.query = e.currentTarget.searchQuery.value.trim();
 
     loadMoreBtn.show();
 
-    newsApiService.resetPage();
+    
     clearGalleryContainer();
     fetchHits();
     
@@ -41,6 +42,10 @@ function fetchHits() {
     newsApiService.fetchArticles().then(hits => {
         appendHitsMarkup(hits);
         loadMoreBtn.enable();
+        scrollOn()
+        
+    }).catch(() => {
+        Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
     });
 }
 
@@ -50,6 +55,17 @@ function appendHitsMarkup(hits) {
 
 function clearGalleryContainer() {
     gallery.innerHTML = '';
+}
+
+function scrollOn() {
+   const { height: cardHeight } = document
+  .querySelector(".gallery")
+  .firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 2,
+  behavior: "smooth",
+});
 }
 
 

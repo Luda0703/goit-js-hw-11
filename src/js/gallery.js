@@ -36,6 +36,7 @@ function renderGallary (photo) {
 const simpleLightBox = new SimpleLightbox('.gallery a', {
     spinner: true,
     nav: true,
+    overlay: true,
     captionsData: 'alt', 
     captionDelay: 250, 
   });
