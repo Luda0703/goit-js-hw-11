@@ -30,11 +30,12 @@ function renderGallary (photo) {
     }
     )
     gallary.insertAdjacentHTML('beforeend', gallaryRander.join(''));
-    // simpleLightBox.refresh();
+    simpleLightBox.refresh();
 };
 
 const simpleLightBox = new SimpleLightbox('.gallery a', {
-    caption: true,
+    spinner: true,
+    nav: true,
     captionsData: 'alt', 
     captionDelay: 250, 
   });
