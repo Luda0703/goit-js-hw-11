@@ -10,6 +10,7 @@ const searchForm = document.querySelector('#search-form');
 const input = document.querySelector('[text]');
 const btn = document.querySelector('[submit]');
 const gallery = document.querySelector('.gallery');
+const spinner = document.querySelector('.spinner')
 
 
 const newsApiService = new NewsApiService();
@@ -46,11 +47,31 @@ function fetchHits() {
         
     }).catch(() => {
         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
+       loadMoreBtn.hide()
     });
 }
 
+// async function fetchHits() {
+//     loadMoreBtn.disable()
+//     try {
+//         const awaitFetch = await newsApiService.fetchArticles();
+//         const appendHits = await awaitFetch.appendHitsMarkup(hits);
+//         loadMoreBtn.enable();
+//         scrollOn();
+//        return appendHits
+//     } catch {
+//         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
+//        loadMoreBtn.hide()
+//     };
+// }
+
+
 function appendHitsMarkup(hits) {
     renderGallary(hits);
+    // if (newsApiService.perPage * newsApiService.page > awaitFetch.data.totalHits) {
+    //     loadMoreBtn.classList.add("is-hidden");
+    //     Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
+    // }
 }
 
 function clearGalleryContainer() {
