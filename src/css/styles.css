@@ -116,6 +116,11 @@ body {
     display: none;
 }
 
+.counter {
+    color: black;
+    font-size: 24px;
+}
+
 /* .spinner {
     justify-content: center;
     width: 50px;

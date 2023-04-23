@@ -11,6 +11,8 @@ const input = document.querySelector('[text]');
 const btn = document.querySelector('[submit]');
 const gallery = document.querySelector('.gallery');
 const spinner = document.querySelector('.spinner')
+const title = document.querySelector('.counter');
+const subTitle = document.querySelector('.totelPages');
 
 
 const newsApiService = new NewsApiService();
@@ -24,6 +26,13 @@ const loadMoreBtn = new LoadMoreBtn({
 searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.refs.button.addEventListener('click', fetchHits);
 
+// const updateUi = (data, per_page) => {
+//     title.textContent = `Всього знайдено ${data?.totalHits} карток`;
+
+//     subTitle.textContent = `Знайдено новин на ${Math.ceil(data?.totalHits / per_page)} сторінках`
+
+// }
+
 function onSearch (e) {
     e.preventDefault();
     
@@ -31,34 +40,40 @@ function onSearch (e) {
     newsApiService.query = e.currentTarget.searchQuery.value.trim();
 
     loadMoreBtn.show();
-
     
     clearGalleryContainer();
-    fetchHits();
-    
+    fetchHits(); 
 }
 
 function fetchHits() {
     loadMoreBtn.disable();
+    
     newsApiService.fetchArticles().then(hits => {
         appendHitsMarkup(hits);
+        // updateUi(data, per_page)
         loadMoreBtn.enable();
-        scrollOn()
-        
+        scrollOn() 
     }).catch(() => {
         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
        loadMoreBtn.hide()
     });
+   
 }
+
 
 // async function fetchHits() {
 //     loadMoreBtn.disable()
+//     newsApiService.incrementPage()
+    
 //     try {
-//         const awaitFetch = await newsApiService.fetchArticles();
-//         const appendHits = await awaitFetch.appendHitsMarkup(hits);
+//         const awaitFetch = await newsApiService.fetchArticles().appendHitsMarkup(awaitFetch.data.hits);
+//         if (newsApiService.per_page * newsApiService.page > awaitFetch.data.totalHits) {
+//             loadMoreBtn.classList.add("is-hidden");
+//             Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
+//         }
 //         loadMoreBtn.enable();
 //         scrollOn();
-//        return appendHits
+       
 //     } catch {
 //         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
 //        loadMoreBtn.hide()
@@ -66,16 +81,12 @@ function fetchHits() {
 // }
 
 
-function appendHitsMarkup(hits) {
+function appendHitsMarkup(hits) {  
     renderGallary(hits);
-    // if (newsApiService.perPage * newsApiService.page > awaitFetch.data.totalHits) {
-    //     loadMoreBtn.classList.add("is-hidden");
-    //     Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
-    // }
 }
 
 function clearGalleryContainer() {
-    gallery.innerHTML = '';
+    gallery.innerHTML = '';  
 }
 
 function scrollOn() {
