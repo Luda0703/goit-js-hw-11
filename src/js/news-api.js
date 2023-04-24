@@ -12,17 +12,17 @@ export default class NewsApiService {
         console.log(this)
         const KEY = "35573875-4d45445cc9cc07d3b69f02897";
         const BASE_URL = 'https://pixabay.com/api/';
-        const URL = `${BASE_URL}?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=${this.per_page}`;
-        // const {data} = axios.get(URL);
-        // return data;
-        return fetch(URL)
-        .then(response => response.json())
-        .then(({ hits }) => {
-            this.incrementPage();
-            // console.log({hits})
-            return hits;
-            
-    });
+        return axios.get(`${BASE_URL}?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=${this.per_page}`);
+
+
+        // const URL = `${BASE_URL}?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=${this.per_page}`;
+        // return fetch(URL)
+        // .then(response => response.json())
+        // .then(({ hits }) => {
+        //     this.incrementPage();
+        //     // console.log({hits})
+        //     return hits;
+        //     });
        
     }
 

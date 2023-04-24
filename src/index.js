@@ -7,13 +7,8 @@ import LoadMoreBtn from "./js/load-more-btn";
 
 
 const searchForm = document.querySelector('#search-form');
-const input = document.querySelector('[text]');
-const btn = document.querySelector('[submit]');
 const gallery = document.querySelector('.gallery');
 const spinner = document.querySelector('.spinner')
-const title = document.querySelector('.counter');
-const subTitle = document.querySelector('.totelPages');
-
 
 const newsApiService = new NewsApiService();
 
@@ -24,65 +19,69 @@ const loadMoreBtn = new LoadMoreBtn({
 
 
 searchForm.addEventListener('submit', onSearch);
-loadMoreBtn.refs.button.addEventListener('click', fetchHits);
+loadMoreBtn.refs.button.addEventListener('click', onLoadMore);
 
-// const updateUi = (data, per_page) => {
-//     title.textContent = `Всього знайдено ${data?.totalHits} карток`;
-
-//     subTitle.textContent = `Знайдено новин на ${Math.ceil(data?.totalHits / per_page)} сторінках`
-
-// }
-
-function onSearch (e) {
+async function onSearch (e) {
     e.preventDefault();
-    
-    newsApiService.resetPage();
     newsApiService.query = e.currentTarget.searchQuery.value.trim();
-
+    newsApiService.resetPage();
     loadMoreBtn.show();
-    
     clearGalleryContainer();
-    fetchHits(); 
-}
-
-function fetchHits() {
-    loadMoreBtn.disable();
-    
-    newsApiService.fetchArticles().then(hits => {
-        appendHitsMarkup(hits);
-        // updateUi(data, per_page)
+    try {
+        const awaitFetch = await newsApiService.fetchArticles()
+        console.log(awaitFetch.data);
+        console.log(awaitFetch.data.hits);
+        console.log(awaitFetch.data.totalHits);
+        renderGallary(awaitFetch.data.hits);
         loadMoreBtn.enable();
-        scrollOn() 
-    }).catch(() => {
-        Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
+
+        if (!newsApiService.query) {
+            Notiflix.Notify.info('Fill the form for searching')
+            return
+          }
+
+        if (awaitFetch.data.totalHits === 0) {
+            Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.')
+              return;
+          }
+          Notiflix.Notify.info(`Hooray! We found ${awaitFetch.data.totalHits} images.`)
+         renderGallary(awaitFetch.data.hits);
+        loadMoreBtn.show()
+
+        if (newsApiService.per_page * newsApiService.page > awaitFetch.data.totalHits) {
+            loadMoreBtn.hide();
+            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
+        }
+       
+    } catch (error) {
+        console.log(error.message);
        loadMoreBtn.hide()
-    });
-   
+    };
+    
+    
 }
 
-
-// async function fetchHits() {
-//     loadMoreBtn.disable()
-//     newsApiService.incrementPage()
+async function onLoadMore() {
     
-//     try {
-//         const awaitFetch = await newsApiService.fetchArticles().appendHitsMarkup(awaitFetch.data.hits);
-//         if (newsApiService.per_page * newsApiService.page > awaitFetch.data.totalHits) {
-//             loadMoreBtn.classList.add("is-hidden");
-//             Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
-//         }
-//         loadMoreBtn.enable();
-//         scrollOn();
+    newsApiService.incrementPage()
+    loadMoreBtn.disable()
+    
+    try {
+        const awaitFetch = await newsApiService.fetchArticles()
+        renderGallary(awaitFetch.data.hits);
+        loadMoreBtn.enable();
+        scrollOn();
+
+        if (newsApiService.per_page * newsApiService.page > awaitFetch.data.totalHits) {
+            loadMoreBtn.classList.add("is-hidden");
+            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
+        }
        
-//     } catch {
-//         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
-//        loadMoreBtn.hide()
-//     };
-// }
-
-
-function appendHitsMarkup(hits) {  
-    renderGallary(hits);
+    } catch (error) {
+        console.log(error.message);
+        //Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
+       loadMoreBtn.hide()
+    };
 }
 
 function clearGalleryContainer() {
@@ -99,6 +98,36 @@ window.scrollBy({
   behavior: "smooth",
 });
 }
+
+
+
+// const title = document.querySelector('.counter');
+// const subTitle = document.querySelector('.totelPages');
+// function fetchHits() {
+//     loadMoreBtn.disable();
+    
+//     newsApiService.fetchArticles().then(hits => {
+//         appendHitsMarkup(hits);
+//         // updateUi(data, per_page)
+//         loadMoreBtn.enable();
+//         scrollOn() 
+//     }).catch(() => {
+//         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
+//        loadMoreBtn.hide()
+//     });
+   
+// }
+
+// function appendHitsMarkup(hits) {  
+//     renderGallary(hits);
+// }
+
+// const updateUi = (data, per_page) => {
+//     title.textContent = `Всього знайдено ${data?.totalHits} карток`;
+
+//     subTitle.textContent = `Знайдено новин на ${Math.ceil(data?.totalHits / per_page)} сторінках`
+
+// }
 
 
 
