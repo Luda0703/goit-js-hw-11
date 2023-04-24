@@ -1,4 +1,4 @@
-// import axios from 'axios';
+
 import Notiflix from 'notiflix';
 import "./css/styles.css"
 import NewsApiService from "./js/news-api";
@@ -21,11 +21,12 @@ const loadMoreBtn = new LoadMoreBtn({
 searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.refs.button.addEventListener('click', onLoadMore);
 
+loadMoreBtn.hide()
+
 async function onSearch (e) {
     e.preventDefault();
     newsApiService.query = e.currentTarget.searchQuery.value.trim();
     newsApiService.resetPage();
-    loadMoreBtn.show();
     clearGalleryContainer();
     try {
         const awaitFetch = await newsApiService.fetchArticles()
@@ -33,7 +34,6 @@ async function onSearch (e) {
         console.log(awaitFetch.data.hits);
         console.log(awaitFetch.data.totalHits);
         renderGallary(awaitFetch.data.hits);
-        loadMoreBtn.enable();
 
         if (!newsApiService.query) {
             Notiflix.Notify.info('Fill the form for searching')
@@ -41,21 +41,22 @@ async function onSearch (e) {
           }
 
         if (awaitFetch.data.totalHits === 0) {
-            Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.')
+            Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+            loadMoreBtn.hide();
               return;
           }
           Notiflix.Notify.info(`Hooray! We found ${awaitFetch.data.totalHits} images.`)
          renderGallary(awaitFetch.data.hits);
-        loadMoreBtn.show()
+         loadMoreBtn.show();
 
         if (newsApiService.per_page * newsApiService.page > awaitFetch.data.totalHits) {
             loadMoreBtn.hide();
             Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
+            
         }
        
     } catch (error) {
         console.log(error.message);
-       loadMoreBtn.hide()
     };
     
     
@@ -64,23 +65,19 @@ async function onSearch (e) {
 async function onLoadMore() {
     
     newsApiService.incrementPage()
-    loadMoreBtn.disable()
     
     try {
         const awaitFetch = await newsApiService.fetchArticles()
         renderGallary(awaitFetch.data.hits);
-        loadMoreBtn.enable();
         scrollOn();
 
         if (newsApiService.per_page * newsApiService.page > awaitFetch.data.totalHits) {
-            loadMoreBtn.classList.add("is-hidden");
+            loadMoreBtn.hide();
             Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
         }
        
     } catch (error) {
         console.log(error.message);
-        //Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
-       loadMoreBtn.hide()
     };
 }
 
